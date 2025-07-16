@@ -46,11 +46,15 @@ class HashMap
           answer = validation
         end
       end
-      answer.print_key
+      if answer.key == key
+        answer.print_key
+      else
+        nil
+      end
     end
   end
 
-  def to_s
+  def to_s_debug
     @bucket.each { |line| p line unless line.nil? }
   end
 
@@ -65,6 +69,31 @@ class HashMap
     validation.key == key
   rescue NoMethodError
     false
+  end
+
+  def node_iterator(node, key)
+    answer = node
+    if node.key == key
+      node.print_key
+    else
+      until node.next_node && answer.key == key
+        node = node.next_node
+        answer = node
+      end
+      answer.print_key
+    end
+  end
+
+  def remove(key)
+    if has?(key) == false
+      nil
+    else
+      index = hash(key)
+      node = @bucket[index]
+      p node_iterator(node, key)
+      node.data = nil
+      node.key = nil
+    end
   end
 
   def print_load_factor
@@ -110,14 +139,6 @@ abc.set('ice cream', 'white')
 abc.set('jacket', 'blue')
 abc.set('kite', 'pink')
 abc.set('lion', 'golden')
-# p abc.get('grape')
-# p abc.get('apple')
-# p abc.get('kite')
-p abc.has?('apple')
-p abc.has?('banana')
-p abc.has?('carrot')
-p abc.has?('dog')
-p abc.has?('ice cream')
-p abc.has?('su123132')
-p abc.has?('rafael ffff')
-p abc.has?('as casdw w')
+abc.get('apple')
+p abc.remove('apple')
+p abc.get('apple')
