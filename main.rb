@@ -46,11 +46,9 @@ class HashMap
           answer = validation
         end
       end
-      if answer.key == key
-        answer.print_key
-      else
-        nil
-      end
+      return nil if answer.nil?
+
+      answer.key == key ? answer.print_key : nil
     end
   end
 
@@ -140,5 +138,7 @@ abc.set('jacket', 'blue')
 abc.set('kite', 'pink')
 abc.set('lion', 'golden')
 abc.get('apple')
-p abc.remove('apple')
 p abc.get('apple')
+p abc.get('batata')
+p abc.get('batesa')
+p abc.get('frog')
