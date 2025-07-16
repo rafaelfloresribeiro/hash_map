@@ -33,18 +33,29 @@ class HashMap
   def get(key)
     index = hash(key)
     validation = @bucket[index] unless @bucket[index].nil?
-    until validation.next_node.nil?
-      if validation.key == key
-        return validation
-      else
-        return validation = validation.next_node
+    answer = nil
+    if validation.key == key
+      validation.print_key
+    else
+      until validation.next_node.nil?
+        if validation.key == key
+          validation.print_key
+          return answer.print_key
+        else
+          validation = validation.next_node
+          answer = validation
+        end
       end
-      nil
+      answer.print_key
     end
   end
 
-  def pry_byebug
-    binding.pry
+  def to_s
+    @bucket.each { |line| p line unless line.nil? }
+  end
+
+  def print_load_factor
+    @bucket
   end
 end
 
@@ -61,7 +72,15 @@ class Node
   end
 
   def append(node)
-    self.next_node = node
+    if @next_node.nil?
+      self.next_node = node
+    else
+      @next_node.append(node)
+    end
+  end
+
+  def print_key
+    [@key, @data]
   end
 end
 
@@ -78,6 +97,7 @@ abc.set('ice cream', 'white')
 abc.set('jacket', 'blue')
 abc.set('kite', 'pink')
 abc.set('lion', 'golden')
-p abc.get('kite')
-p abc.get('apple')
-p abc.get('fantasma')
+# p abc.get('grape')
+# p abc.get('apple')
+# p abc.get('kite')
+abc.to_s
