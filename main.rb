@@ -97,6 +97,22 @@ class HashMap
   def print_load_factor
     @bucket
   end
+
+  def length
+    length = 0
+    temp_length = 0
+    @bucket.each do |bucket|
+      next if bucket.nil?
+
+      temp_length = bucket
+      while temp_length.next_node
+        length += 1
+        temp_length = temp_length.next_node
+      end
+      length += 1 if bucket.key
+    end
+    length
+  end
 end
 
 #   raise IndexError if index.negative? || index >= @buckets.length
@@ -137,8 +153,5 @@ abc.set('ice cream', 'white')
 abc.set('jacket', 'blue')
 abc.set('kite', 'pink')
 abc.set('lion', 'golden')
-abc.get('apple')
-p abc.get('apple')
-p abc.get('batata')
-p abc.get('batesa')
-p abc.get('frog')
+# abc.get('apple')
+p abc.length
