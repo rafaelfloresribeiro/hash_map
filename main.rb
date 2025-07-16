@@ -54,6 +54,19 @@ class HashMap
     @bucket.each { |line| p line unless line.nil? }
   end
 
+  def has?(key)
+    index = hash(key)
+    validation = @bucket[index]
+    while validation.next_node
+      return true if validation.key == key
+
+      validation = validation.next_node
+    end
+    validation.key == key
+  rescue NoMethodError
+    false
+  end
+
   def print_load_factor
     @bucket
   end
@@ -100,4 +113,11 @@ abc.set('lion', 'golden')
 # p abc.get('grape')
 # p abc.get('apple')
 # p abc.get('kite')
-abc.to_s
+p abc.has?('apple')
+p abc.has?('banana')
+p abc.has?('carrot')
+p abc.has?('dog')
+p abc.has?('ice cream')
+p abc.has?('su123132')
+p abc.has?('rafael ffff')
+p abc.has?('as casdw w')
