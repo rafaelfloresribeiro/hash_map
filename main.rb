@@ -113,6 +113,52 @@ class HashMap
     end
     length
   end
+
+  def clear
+    @bucket.clear
+  end
+
+  def keys_values(variable)
+    array = []
+    @bucket.each do |bucket|
+      next if bucket.nil?
+
+      array << bucket.public_send(variable)
+      if bucket.next_node
+        temp_bucket = bucket
+        while temp_bucket.next_node
+          array << temp_bucket.next_node.public_send(variable)
+          temp_bucket = temp_bucket.next_node
+        end
+      end
+    end
+    array
+  end
+
+  def keys
+    keys_values('key')
+  end
+
+  def values
+    keys_values('data')
+  end
+
+  def entries
+    array = []
+    @bucket.each do |bucket|
+      next if bucket.nil?
+
+      array << [bucket.key, bucket.data]
+      if bucket.next_node
+        temp_bucket = bucket
+        while temp_bucket.next_node
+          array << [temp_bucket.next_node.key, temp_bucket.next_node.data]
+          temp_bucket = temp_bucket.next_node
+        end
+      end
+    end
+    array
+  end
 end
 
 #   raise IndexError if index.negative? || index >= @buckets.length
@@ -153,5 +199,6 @@ abc.set('ice cream', 'white')
 abc.set('jacket', 'blue')
 abc.set('kite', 'pink')
 abc.set('lion', 'golden')
-# abc.get('apple')
-p abc.length
+p abc.entries
+# p abc.keys
+# p abc.values
