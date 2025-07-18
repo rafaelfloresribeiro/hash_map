@@ -6,21 +6,33 @@ require 'pry-byebug'
 class HashMap
   attr_accessor :load_factor, :capacity
 
-  PRIME_FACTOR = 31
-
-  def initialize
+  def initialize(capacity = 12)
     @load_factor = 0.75
-    @capacity = 31
+    @capacity = capacity
     @bucket = Array.new(@capacity)
+    @counter = 0
   end
 
   def hash(key)
     hash_code = 0
-    key.each_char { |char| hash_code = PRIME_FACTOR * hash_code + char.ord }
-    hash_code.modulo(@capacity)
+    key.each_char { |char| hash_code = 31 * hash_code + char.ord }
+    hash_code.modulo(@bucket.length)
+  end
+
+  def bucket_counter
+    @counter += 1
+    loop_counter = @bucket.length * @load_factor
+    re_hash if @counter >= loop_counter
+  end
+
+  def re_hash
+    hash_map = entries
+    @bucket = Array.new(@bucket.length * 2)
+    hash_map.each { |hash| set(hash[0], hash[1]) }
   end
 
   def set(key, value)
+    bucket_counter
     node = Node.new(key, value)
     index = hash(key)
     if @bucket[index].nil?
@@ -30,8 +42,15 @@ class HashMap
     end
   end
 
+  def duplicate?(key)
+    index = hash(key)
+    binding.pry
+  end
+
   def get(key)
     index = hash(key)
+    return if @bucket[index].nil?
+
     validation = @bucket[index] unless @bucket[index].nil?
     answer = nil
     if validation.key == key
@@ -159,6 +178,14 @@ class HashMap
     end
     array
   end
+
+  def calculate_capacity
+    p values.length / @bucket.length
+  end
+
+  def i_love_pry
+    binding.pry
+  end
 end
 
 #   raise IndexError if index.negative? || index >= @buckets.length
@@ -174,6 +201,8 @@ class Node
   end
 
   def append(node)
+    return if node.key == @key
+
     if @next_node.nil?
       self.next_node = node
     else
@@ -199,6 +228,5 @@ abc.set('ice cream', 'white')
 abc.set('jacket', 'blue')
 abc.set('kite', 'pink')
 abc.set('lion', 'golden')
-p abc.entries
-# p abc.keys
-# p abc.values
+abc.set('poppy', 'head')
+abc.i_love_pry
